@@ -5,7 +5,8 @@ import {
     cast,
     SnapshotOrInstance,
     IAnyModelType,
-    IAnyComplexType
+    IAnyComplexType,
+    getIdentifier
 } from "../../src"
 
 if (process.env.NODE_ENV !== "production") {
@@ -207,4 +208,11 @@ test("it can resolve through refrences", () => {
     expect(() => resolvePath(root, "/children/3/target/children/0").name).toThrow(
         "[mobx-state-tree] Failed to resolve reference 'e' to type 'Folder' (from node: /children/3/target)"
     )
+})
+
+test("Identifiers should work with optional", () => {
+    const Item = types.model({
+        id: types.optional(types.identifier, "dummykey")
+    })
+    expect(getIdentifier(Item.create())).toBe("dummykey")
 })
